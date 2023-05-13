@@ -21,12 +21,3 @@ const useTodos = () => {
 
 export default useTodos;
 
-// const [todos, setTodos] = useState<Todo[]>([]);
-// const [error, setError] = useState('');
-
-// useEffect(() => {
-//   axios
-//     .get('https://jsonplaceholder.typicode.com/todos')
-//     .then((res) => setTodos(res.data))
-//     .catch((error) => setError(error));
-// }, []);

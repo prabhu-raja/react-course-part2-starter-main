@@ -20,12 +20,12 @@ const TodoList = () => {
 
 export default TodoList;
 
-// const [posts, setPosts] = useState<Post[]>([]);
-  // const [error, setError] = useState('');
+// const [todos, setTodos] = useState<Todo[]>([]);
+// const [error, setError] = useState('');
 
-  // useEffect(() => {
-  //   axios
-  //     .get('https://jsonplaceholder.typicode.com/posts')
-  //     .then((res) => setPosts(res.data))
-  //     .catch((error) => setError(error));
-  // }, []);
+// useEffect(() => {
+//   axios
+//     .get('https://jsonplaceholder.typicode.com/todos')
+//     .then((res) => setTodos(res.data))
+//     .catch((error) => setError(error));
+// }, []);
