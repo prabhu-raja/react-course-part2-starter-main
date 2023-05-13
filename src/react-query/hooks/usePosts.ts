@@ -21,6 +21,7 @@ const usePosts = (userId: number | undefined) => {
     queryKey: userId ? ['users', userId, 'posts'] : ['posts'],
     queryFn: fetchPostList,
     staleTime: 10 * 1000,
+    keepPreviousData: true,
   });
 };
 
