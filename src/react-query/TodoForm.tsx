@@ -14,7 +14,7 @@ const TodoForm = () => {
   const addTodo = useMutation<Todo, Error, Todo, AddTodoContext>({
     mutationFn: (todo: Todo) => {
       return axios
-        .post<Todo>('https://jsonplaceholder.typicode.com/todos', todo)
+        .post<Todo>('https://jsonplaceholder.typicode.com/todosx', todo)
         .then((res) => res.data);
     },
 
@@ -32,27 +32,23 @@ const TodoForm = () => {
     },
 
     onSuccess: (savedTodo, newTodo) => {
-      console.log('savedTodo', savedTodo);
-      console.log('newTodo', newTodo);
-
-      console.log('before', queryClient.getQueryData(['todos']));
       queryClient.setQueryData<Todo[]>(['todos'], (allTodos) => {
         return allTodos?.map((todo, indx) => {
           // return todo === newTodo ? savedTodo : todo;
           if (todo.title === newTodo.title) {
-            console.log('Cond Passed');
             return savedTodo;
           } else {
             return todo;
           }
         });
       });
-      console.log('after', queryClient.getQueryData(['todos']));
     },
 
     onError: (err, newTodo, contxt) => {
       if (!contxt) return;
       queryClient.setQueryData<Todo[]>(['todos'], contxt.previousTodos);
+      // const prevTodos = queryClient.getQueryData<Todo[]>(['todos']);
+      // queryClient.setQueryData<Todo[]>(['todos'], prevTodos);
     },
   });
 
