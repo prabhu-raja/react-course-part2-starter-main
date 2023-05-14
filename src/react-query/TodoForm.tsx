@@ -1,32 +1,60 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 import { useRef } from 'react';
 import { Todo } from './hooks/useTodos';
-import axios from 'axios';
+
+interface AddTodoContext {
+  previousTodos: Todo[];
+}
 
 const TodoForm = () => {
+  const ref = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
-  const addTodo = useMutation<Todo, Error, Todo>({
-    mutationFn: (todo: Todo) =>
-      axios.post<Todo>('https://jsonplaceholder.typicode.com/todos', todo).then((res) => res.data),
-    onSuccess: (savedTodo, newTodo) => {
-      console.log('savedTodo - ', savedTodo);
-      console.log('newTodo', newTodo);
-      /*
-      * Approach 1: Invalidate the cache in React Query
-      queryClient.invalidateQueries({ queryKey: ['todos'] }); 
-      * Here the queryKey 'todos' must be same with which used in useTodos-useQuery
-      * But this approach 1 won't work since jsonplaceholder is a fake api
-      */
 
-      // * Approach 2: Updating data in cache directly
+  const addTodo = useMutation<Todo, Error, Todo, AddTodoContext>({
+    mutationFn: (todo: Todo) => {
+      return axios
+        .post<Todo>('https://jsonplaceholder.typicode.com/todos', todo)
+        .then((res) => res.data);
+    },
+
+    onMutate: (newTodo: Todo) => {
+      console.log('mutate');
+      const previousTodos = queryClient.getQueryData<Todo[]>(['todos']) || [];
+
       queryClient.setQueryData<Todo[]>(['todos'], (allTodos) => {
-        return [savedTodo, ...(allTodos || [])];
+        return [newTodo, ...(allTodos || [])];
       });
 
       if (ref.current) ref.current.value = '';
+
+      return { previousTodos };
+    },
+
+    onSuccess: (savedTodo, newTodo) => {
+      console.log('savedTodo', savedTodo);
+      console.log('newTodo', newTodo);
+
+      console.log('before', queryClient.getQueryData(['todos']));
+      queryClient.setQueryData<Todo[]>(['todos'], (allTodos) => {
+        return allTodos?.map((todo, indx) => {
+          // return todo === newTodo ? savedTodo : todo;
+          if (todo.title === newTodo.title) {
+            console.log('Cond Passed');
+            return savedTodo;
+          } else {
+            return todo;
+          }
+        });
+      });
+      console.log('after', queryClient.getQueryData(['todos']));
+    },
+
+    onError: (err, newTodo, contxt) => {
+      if (!contxt) return;
+      queryClient.setQueryData<Todo[]>(['todos'], contxt.previousTodos);
     },
   });
-  const ref = useRef<HTMLInputElement>(null);
 
   return (
     <>
