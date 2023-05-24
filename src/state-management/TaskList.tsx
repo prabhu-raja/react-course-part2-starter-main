@@ -1,19 +1,12 @@
-import { useReducer, useState } from 'react';
+import { useReducer } from 'react';
 import tasksReducer from './reducers/tasksReducer';
 
 const TaskList = () => {
-  // const [tasks, setTasks] = useState<Task[]>([]);
   const [tasks, dispatch] = useReducer(tasksReducer, []);
 
   return (
     <>
       <button
-        // onClick={() =>
-        //   setTasks([
-        //     { id: Date.now(), title: 'Task ' + Date.now() },
-        //     ...tasks,
-        //   ])
-        // }
         onClick={() =>
           dispatch({
             type: 'ADD',
@@ -40,7 +33,6 @@ const TaskList = () => {
                   taskId: task.id,
                 })
               }>
-              {/* onClick={() => setTasks(tasks.filter((t) => t.id !== task.id))}> */}
               Delete
             </button>
           </li>

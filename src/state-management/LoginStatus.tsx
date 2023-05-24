@@ -13,9 +13,6 @@ const LoginStatus = () => {
           <a onClick={() => dispatch({ type: 'LOGOUT' })} href="#">
             Logout
           </a>
-          {/* <a onClick={() => setUser('')} href="#">
-            Logout
-          </a> */}
         </div>
       </>
     );
@@ -24,9 +21,6 @@ const LoginStatus = () => {
       <a onClick={() => dispatch({ type: 'LOGIN', userName: 'mosh.hamedani' })} href="#">
         Login
       </a>
-      {/* <a onClick={() => setUser('mosh.hamedani')} href="#">
-        Login
-      </a> */}
     </div>
   );
 };
